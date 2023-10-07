@@ -25,7 +25,7 @@ rem #>
 $ErrorActionPreference = 'Inquire'
 Add-Type -Assembly 'System.IO.Compression.Filesystem'
 
-$debug = $true
+$debug = $false
 $dxvkRepo = 'NVIDIAGameWorks/dxvk-remix'
 $bridgeRepo = 'NVIDIAGameWorks/bridge-remix'
 $workflow = 'build'
