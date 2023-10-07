@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# but these files
+!.gitignore
+!LICENSE
+!README.md
+
+!RTX.Remix.Downloader.bat
