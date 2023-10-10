@@ -160,7 +160,7 @@ Set-Content -Path './version.txt' -Value ($latestDxvkRun,$latestBridgeRun) -Forc
 
 Write-Host 'Cleaning up..'
 Remove-Item -Path './temp' -Recurse -Force
-Remove-Item -Path './*.pdb', './.trex/*.pdb', './.trex/artifacts_readme.txt' -Force
+Remove-Item -Path './*.pdb', './.trex/*.pdb', './.trex/artifacts_readme.txt' -Force -ErrorAction Ignore
 
 
 Write-Host 'Done!' -ForegroundColor Green
