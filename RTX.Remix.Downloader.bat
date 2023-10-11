@@ -23,6 +23,28 @@ rem #>
 
 #	---RTX Remix Downloader---
 $ErrorActionPreference = 'Inquire'
+
+
+function ReplaceRecursively {
+    param (
+        [string]$Path,
+        [string]$Target
+    )
+
+    Get-ChildItem -Path $Path | ForEach-Object {
+        $itemPath = Join-Path -Path $Target -ChildPath $_.Name
+        if ($_.Attributes -eq 'Directory') {
+            New-Item -ItemType Directory -Path $itemPath -Force | Out-Null
+            ReplaceRecursively -Path $_.FullName -Target $itemPath
+            Remove-Item -Path $_.FullName -Force
+        } else {
+            Move-Item -Path $_.FullName -Destination $itemPath -Force
+        }
+    }
+
+}
+
+
 Add-Type -Assembly 'System.IO.Compression.Filesystem'
 
 $debug = $false
@@ -129,8 +151,7 @@ if ($dxvkDated) {
 	Write-Host 'Extracting files from the archive..'
 	[System.IO.Compression.ZipFile]::ExtractToDirectory("$($PSScript.Root)/$targetFolder/temp/dxvk-remix.zip", "$($PSScript.Root)/$targetFolder/temp/dxvk-remix")
 
-
-	Move-Item -Path './temp/dxvk-remix' -Destination './.trex' -Force
+	ReplaceRecursively -Path './temp/dxvk-remix' -Target './.trex'
 
 }
 
@@ -147,9 +168,7 @@ if ($bridgeDated) {
 	Write-Host 'Extracting files from the archive..'
 	[System.IO.Compression.ZipFile]::ExtractToDirectory("$($PSScript.Root)/$targetFolder/temp/bridge-remix.zip", "$($PSScript.Root)/$targetFolder/temp/bridge-remix")
 
-
-	Move-Item -Path './temp/bridge-remix/d3d9.dll', './temp/bridge-remix/NvRemixLauncher32.exe' -Destination '.' -Force
-	Move-Item -Path './temp/bridge-remix/.trex/NvRemixBridge.exe' -Destination './.trex' -Force
+	ReplaceRecursively -Path './temp/bridge-remix' -Target '.'
 
 }
 
