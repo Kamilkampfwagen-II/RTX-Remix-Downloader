@@ -65,9 +65,11 @@ Write-Host '> ' -NoNewline
 if (($Host.UI.ReadLine()) -eq 1) {
 	$linkIndex = 4
 	$targetFolder = 'remix-debug'
+	$buildType = 'debug optimized'
 } else {
 	$linkIndex = 6
 	$targetFolder = 'remix-release'
+	$buildType = 'release'
 }
 Write-Host ''
 
@@ -91,7 +93,7 @@ if ($currentRunList) {
 }
 
 
-Write-Host 'Fetching the latest dxvk-remix build info..'
+Write-Host "Fetching the latest dxvk-remix $buildType build info.."
 $progressPreference = 'SilentlyContinue'
 $dxvkNightlyInfo = Invoke-WebRequest -Uri "https://nightly.link/$dxvkRepo/workflows/$workflow/$branch" -UseBasicParsing
 $progressPreference = 'Continue'
@@ -106,7 +108,7 @@ if ($currentDxvkRun -eq $latestDxvkRun) {
 }
 
 
-Write-Host 'Fetching the latest bridge-remix build info..'
+Write-Host "Fetching the latest bridge-remix $buildType build info.."
 $progressPreference = 'SilentlyContinue'
 $bridgeNightlyInfo = Invoke-WebRequest -Uri "https://nightly.link/$bridgeRepo/workflows/$workflow/$branch" -UseBasicParsing
 $progressPreference = 'Continue'
@@ -141,7 +143,7 @@ if ($debug) {
 
 if ($dxvkDated) {
 
-	Write-Host 'Downloading the latest dxvk-remix build from ' -NoNewline
+	Write-Host "Downloading the latest dxvk-remix $buildType build from " -NoNewline
 	Write-Host 'NVIDIAGameWorks/dxvk-remix' -ForegroundColor Blue
 	$progressPreference = 'SilentlyContinue'
 	Invoke-WebRequest -Uri $dxvkNightlyLink -OutFile './temp/dxvk-remix.zip' -UseBasicParsing
@@ -158,7 +160,7 @@ if ($dxvkDated) {
 
 if ($bridgeDated) {
 
-	Write-Host 'Downloading the latest bridge-remix build from ' -NoNewline
+	Write-Host "Downloading the latest bridge-remix $buildType build from " -NoNewline
 	Write-Host 'NVIDIAGameWorks/bridge-remix' -ForegroundColor Blue
 	$progressPreference = 'SilentlyContinue'
 	Invoke-WebRequest -Uri $bridgeNightlyLink -OutFile './temp/bridge-remix.zip' -UseBasicParsing
