@@ -47,7 +47,7 @@ function ReplaceRecursively {
 
 Add-Type -Assembly 'System.IO.Compression.Filesystem'
 
-$debug = $false
+$debug = $true
 $dxvkRepo = 'NVIDIAGameWorks/dxvk-remix'
 $bridgeRepo = 'NVIDIAGameWorks/bridge-remix'
 $workflow = 'build'
@@ -93,32 +93,34 @@ if ($currentRunList) {
 }
 
 
-Write-Host "Fetching the latest dxvk-remix $buildType build info.."
+Write-Host "dxvk-remix   [$buildType]: " -NoNewline
 $progressPreference = 'SilentlyContinue'
 $dxvkNightlyInfo = Invoke-WebRequest -Uri "https://nightly.link/$dxvkRepo/workflows/$workflow/$branch" -UseBasicParsing
 $progressPreference = 'Continue'
 $latestDxvkRun = $dxvkNightlyInfo.Links[$linkIndex].href.Split('-')[3]
 
 if ($currentDxvkRun -eq $latestDxvkRun) {
-    Write-Host 'Up to date!' -ForegroundColor Green
+	Write-Host 'UP TO DATE' -ForegroundColor Green
 } else {
 	$dxvkDated = $true
-    Write-Host 'A new build is available: ' -NoNewline
+    Write-Host $currentDxvkRun -ForegroundColor Blue -NoNewline
+    Write-Host ' --> ' -ForegroundColor Yellow -NoNewline
     Write-Host $latestDxvkRun -ForegroundColor Blue
 }
 
 
-Write-Host "Fetching the latest bridge-remix $buildType build info.."
+Write-Host "bridge-remix [$buildType]: " -NoNewline
 $progressPreference = 'SilentlyContinue'
 $bridgeNightlyInfo = Invoke-WebRequest -Uri "https://nightly.link/$bridgeRepo/workflows/$workflow/$branch" -UseBasicParsing
 $progressPreference = 'Continue'
 $latestBridgeRun = $bridgeNightlyInfo.Links[$linkIndex].href.Split('-')[3]
 
 if ($currentBridgeRun -eq $latestBridgeRun) {
-    Write-Host 'Up to date!' -ForegroundColor Green
+    Write-Host 'UP TO DATE' -ForegroundColor Green
 } else {
 	$bridgeDated = $true
-    Write-Host 'A new build is available: ' -NoNewline
+    Write-Host $currentBridgeRun -ForegroundColor Blue -NoNewline
+    Write-Host ' --> ' -ForegroundColor Yellow -NoNewline
     Write-Host $latestBridgeRun -ForegroundColor Blue
 }
 
@@ -126,7 +128,7 @@ if ($currentBridgeRun -eq $latestBridgeRun) {
 if (!$dxvkDated -and !$bridgeDated) {
 	Remove-Item -Path './temp' -Recurse -Force
 	Write-Host ''
-	Read-Host -Prompt "Press enter to open the $targetFolder folder"
+	Read-Host -Prompt "Press ENTER to open the $targetFolder folder"
 	& explorer.exe .
 	exit
 }
@@ -149,17 +151,17 @@ if ($dxvkDated) {
 	Invoke-WebRequest -Uri $dxvkNightlyLink -OutFile './temp/dxvk-remix.zip' -UseBasicParsing
 	$progressPreference = 'Continue'
 	
-
-	Write-Host 'Extracting files from the archive..'
+	
+	Write-Host 'Extracting..'
 	[System.IO.Compression.ZipFile]::ExtractToDirectory("$($PSScript.Root)/$targetFolder/temp/dxvk-remix.zip", "$($PSScript.Root)/$targetFolder/temp/dxvk-remix")
-
+	
 	ReplaceRecursively -Path './temp/dxvk-remix' -Target './.trex'
-
+	
 }
 
 
 if ($bridgeDated) {
-
+	
 	Write-Host "Downloading the latest bridge-remix $buildType build from " -NoNewline
 	Write-Host 'NVIDIAGameWorks/bridge-remix' -ForegroundColor Blue
 	$progressPreference = 'SilentlyContinue'
@@ -167,7 +169,7 @@ if ($bridgeDated) {
 	$progressPreference = 'Continue'
 
 
-	Write-Host 'Extracting files from the archive..'
+	Write-Host 'Extracting..'
 	[System.IO.Compression.ZipFile]::ExtractToDirectory("$($PSScript.Root)/$targetFolder/temp/bridge-remix.zip", "$($PSScript.Root)/$targetFolder/temp/bridge-remix")
 
 	ReplaceRecursively -Path './temp/bridge-remix' -Target '.'
@@ -186,5 +188,5 @@ Remove-Item -Path './*.pdb', './.trex/*.pdb', './artifacts_readme.txt', './.trex
 
 Write-Host 'Done!' -ForegroundColor Green
 Write-Host ''
-Read-Host -Prompt "Press enter to open the $targetFolder folder"
+Read-Host -Prompt "Press ENTER to open the $targetFolder folder"
 & explorer.exe .
