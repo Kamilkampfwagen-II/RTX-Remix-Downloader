@@ -59,8 +59,9 @@ Write-Host 'This script is dependant on the nightly.link project by oprypin'
 Write-Host 'This script is not affiliated with the RTX Remix project by NVIDIAGameWorks' -ForegroundColor Red
 Write-Host ''
 
-Write-Host '0 - Release Build (default)'
-Write-Host '1 - Debug Optimized Build'
+Write-Host 'Select preferred dxvk-remix build. Default is "Release".'
+Write-Host '0 - Release		(most performant)'
+Write-Host '1 - Debug Optimized	(can toggle remix)'
 Write-Host '> ' -NoNewline
 if (($Host.UI.ReadLine()) -eq 1) {
 	$linkIndex = 4
@@ -109,7 +110,7 @@ if ($currentDxvkRun -eq $latestDxvkRun) {
 }
 
 
-Write-Host "bridge-remix [$buildType]: " -NoNewline
+Write-Host "bridge-remix [release]: " -NoNewline
 $progressPreference = 'SilentlyContinue'
 $bridgeNightlyInfo = Invoke-WebRequest -Uri "https://nightly.link/$bridgeRepo/workflows/$workflow/$branch" -UseBasicParsing
 $progressPreference = 'Continue'
