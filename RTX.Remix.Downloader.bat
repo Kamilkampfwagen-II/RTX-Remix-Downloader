@@ -113,7 +113,7 @@ Write-Host "bridge-remix [$buildType]: " -NoNewline
 $progressPreference = 'SilentlyContinue'
 $bridgeNightlyInfo = Invoke-WebRequest -Uri "https://nightly.link/$bridgeRepo/workflows/$workflow/$branch" -UseBasicParsing
 $progressPreference = 'Continue'
-$latestBridgeRun = $bridgeNightlyInfo.Links[$linkIndex].href.Split('-')[3]
+$latestBridgeRun = $bridgeNightlyInfo.Links[6].href.Split('-')[3]
 
 if ($currentBridgeRun -eq $latestBridgeRun) {
     Write-Host 'UP TO DATE' -ForegroundColor Green
