@@ -1,26 +1,3 @@
-$ErrorActionPreference = 'SilentlyContinue'
-rem <#
-	cls
-	@echo off
-	cd %~dp0
-	set "helper=$args=$args -split '';$Error.Clear();Set-Variable PSScript -Option Constant -Value ([ordered]@{Root=$args[0].Substring(0,$args[0].Length-1);Name=$args[1];FullName=$args[2];Args=$args[3..$args.length]}).AsReadOnly();Invoke-Command([ScriptBlock]::Create((Get-Content $args[2] -Raw))) -NoNewScope -ArgumentList $args[3..$args.Length]"
-
-	:initArg
-	set args=%~dp0%~nx0%0
-	if '%1'=='' goto exec
-	set args=%args%%1
-
-	:addArg
-	shift
-	if '%1'=='' goto exec
-	set args=%args%%1
-	goto addArg
-
-	:exec
-	Powershell.exe -ExecutionPolicy Bypass -Command $ErrorActionPreference = 'Continue';$args = '%args%';%helper%
-	exit
-rem #>
-
 #	---RTX Remix Downloader---
 $ErrorActionPreference = 'Inquire'
 
